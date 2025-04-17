@@ -1,20 +1,19 @@
 # tallylingo
 
-文字数・単語数・行数などのテキスト統計を簡単に取得できるCLIツールです．
+This is a CLI tool that allows you to easily obtain text statistics such as the number of characters, words, and lines.
 
 ## Description
-指定されたテキストファイルと指定されたディレクトリの中の文字数・行数・単語数・バイト数をカウントします．
-いくつかの出力形式をサポートします．
+The program counts the number of characters, lines, words, and bytes in the specified text file.
+It supports several output formats.
 
 ## Usage
 ```
 tallylingo version 
 tallylingo [CLI_MODE_OPTIONS] [FILEs...|DIRs...]
 CLI_MODE_OPTIONS
-  -w, --word        文字数のみカウントして標準出力します．
-  -l, --line        行数のみカウントして標準出力します．
-  -c, --character   単語数のみカウントして標準出力します．
-  -b, --byte        バイト数のみカウントして標準出力します，
-  -h, --help        ヘルプメッセージを表示します．
-  -o, --output      テキストファイルに結果を出力します．
+  -w, --word        Prints the number of words in the input file
+  -l, --line        Prints the number of lines in the input file
+  -c, --character   Prints the number of characters in the input file
+  -b, --byte        Prints the number of bytes in the input file
+  -h, --help        Prints this message
 ```
