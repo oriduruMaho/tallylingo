@@ -1,6 +1,6 @@
 # tallylingo
 
-https://img.shields.io/github/license/oriduruMaho/tallylingo
+![GitHub License](https://img.shields.io/github/license/oriduruMaho/tallylingo)
 
 This is a CLI tool that allows you to easily obtain text statistics such as the number of characters, words, and lines.
 
