@@ -2,15 +2,15 @@ package main
 
 import "testing"
 
-func Example_wildcherry() {
-	goMain([]string{"wildcherry"})
+func Example_tallylingo() {
+	goMain([]string{"tallylingo"})
 	// Output:
-	// Welcome to WildCherry!
+	// Welcome to tallylingo!
 }
 
 func TestHello(t *testing.T) {
 	got := hello()
-	want := "Welcome to WildCherry!"
+	want := "Welcome to tallylingo!"
 	if got != want {
 		t.Errorf("hello() = %q, want %q", got, want)
 	}
