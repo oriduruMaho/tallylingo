@@ -1,6 +1,8 @@
 # tallylingo
 
 ![GitHub License](https://img.shields.io/github/license/oriduruMaho/tallylingo)
+[![Go Report Card](https://goreportcard.com/badge/github.com/oriduruMaho/tallylingo)](https://goreportcard.com/report/github.com/oriduruMaho/tallylingo)
+[![Coverage Status](https://coveralls.io/repos/github/oriduruMaho/tallylingo/badge.svg?branch=main)](https://coveralls.io/github/oriduruMaho/tallylingo?branch=main)
 
 This is a CLI tool that allows you to easily obtain text statistics such as the number of characters, words, and lines.
 
