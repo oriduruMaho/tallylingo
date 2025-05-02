@@ -36,8 +36,7 @@ make_distribution_files:
     for os in "linux" "windows" "darwin"; do \
         for arch in "amd64" "arm64"; do \
             mkdir -p dist/{{ App }}-$os-$arch; \
-            env GOOS=$os GOARCH=$arch go build -o dist/{{ App }}-$os-$arch/{{ App }} 
-            cmd/main/{{ App }}.go; \
+            env GOOS=$os GOARCH=$arch go build -o dist/{{ App }}-$os-$arch/{{ App }} cmd/main/{{ App }}.go; \
             cp README.md LICENSE dist/{{ App }}-$os-$arch; \
             tar cvfz dist/t{{ App }}-$os-$arch.tar.gz -C dist {{ App }}-$os-$arch; \
         done; \
