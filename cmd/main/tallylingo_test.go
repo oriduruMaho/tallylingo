@@ -15,3 +15,7 @@ func TestHello(t *testing.T) {
 		t.Errorf("hello() = %q, want %q", got, want)
 	}
 }
+
+func TestHelpMessage(t *testing.T) {
+	goMain([]string{"tallylingo", "-h"})
+}
