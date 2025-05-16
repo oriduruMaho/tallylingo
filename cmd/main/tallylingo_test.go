@@ -8,13 +8,13 @@ func Example_tallylingo() {
 	// Welcome to tallylingo!
 }
 
-func TestHello(t *testing.T) {
-	got := hello()
-	want := "Welcome to tallylingo!"
-	if got != want {
-		t.Errorf("hello() = %q, want %q", got, want)
-	}
-}
+// func TestHello(t *testing.T) {
+// 	got := hello()
+// 	want := "Welcome to tallylingo!"
+// 	if got != want {
+// 		t.Errorf("hello() = %q, want %q", got, want)
+// 	}
+// }
 
 func TestHelpMessage(t *testing.T) {
 	goMain([]string{"tallylingo", "-h"})

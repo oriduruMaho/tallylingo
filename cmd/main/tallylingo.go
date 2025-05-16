@@ -73,6 +73,26 @@ func countMetrics(r io.Reader) (lines int, words int, chars int, bytes int) {
 	return
 }
 
+func parseAndValidateFlags(flags *flag.FlagSet, opts *options, args []string) error {
+	err := flags.Parse(args[1:])
+	if err != nil {
+		return fmt.Errorf("error parsing flags: %w", err)
+	}
+
+	if opts.printer.help {
+		flags.Usage()
+		os.Exit(0)
+	}
+
+	if !opts.targets.words && !opts.targets.line && !opts.targets.characters && !opts.targets.bytes {
+		opts.targets.words = true
+		opts.targets.line = true
+		opts.targets.characters = true
+		opts.targets.bytes = true
+	}
+	return nil
+}
+
 func printCountsHeader(opts *CountingTargets) {
 	fmt.Printf("%-15s", "File")
 	if opts.line {
@@ -108,39 +128,15 @@ func printCounts(filename string, lines, words, chars, bytes int, opts *Counting
 	fmt.Println()
 }
 
-// func hello() string {
-// 	return "Welcome to tallylingo!"
-// }
+type countTotals struct {
+	lines int
+	words int
+	chars int
+	bytes int
+}
 
-func goMain(args []string) int {
-	flags, opts := buildFlagSet()
-	err := flags.Parse(args[1:])
-	if err != nil {
-		fmt.Fprintln(os.Stderr, "Error parsing flags:", err)
-		return 1
-	}
-
-	if opts.printer.help {
-		flags.Usage()
-		return 0
-	}
-
-	if !opts.targets.words && !opts.targets.line && !opts.targets.characters && !opts.targets.bytes {
-		opts.targets.words = true
-		opts.targets.line = true
-		opts.targets.characters = true
-		opts.targets.bytes = true
-	}
-
-	files := flags.Args()
-	if len(files) == 0 {
-		fmt.Fprintln(os.Stderr, "No input files specified.")
-		return 1
-	}
-
-	printCountsHeader(opts.targets)
-
-	var totalLines, totalWords, totalChars, totalBytes int
+func processFiles(files []string, targets *CountingTargets) countTotals {
+	var total countTotals
 
 	for _, file := range files {
 		f, err := os.Open(file)
@@ -151,16 +147,39 @@ func goMain(args []string) int {
 		defer f.Close()
 
 		lines, words, chars, bytes := countMetrics(f)
-		printCounts(file, lines, words, chars, bytes, opts.targets)
+		printCounts(file, lines, words, chars, bytes, targets)
 
-		totalLines += lines
-		totalWords += words
-		totalChars += chars
-		totalBytes += bytes
+		total.lines += lines
+		total.words += words
+		total.chars += chars
+		total.bytes += bytes
+	}
+	return total
+}
+
+// func hello() string {
+// 	return "Welcome to tallylingo!"
+// }
+
+func goMain(args []string) int {
+	flags, opts := buildFlagSet()
+	if err := parseAndValidateFlags(flags, opts, args); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
 	}
 
+	files := flags.Args()
+	if len(files) == 0 {
+		fmt.Fprintln(os.Stderr, "No input files specified.")
+		return 1
+	}
+
+	printCountsHeader(opts.targets)
+
+	total := processFiles(files, opts.targets)
+
 	if len(files) > 1 {
-		printCounts("Total", totalLines, totalWords, totalChars, totalBytes, opts.targets)
+		printCounts("Total", total.lines, total.words, total.chars, total.bytes, opts.targets)
 	}
 
 	return 0
