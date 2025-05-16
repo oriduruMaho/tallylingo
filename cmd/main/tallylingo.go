@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"io"
 	"os"
+	"strings"
 
 	flag "github.com/spf13/pflag"
 )
@@ -50,12 +53,116 @@ func buildFlagSet() (*flag.FlagSet, *options) {
 	return flags, opts
 }
 
-func hello() string {
-	return "Welcome to tallylingo!"
+func countMetrics(r io.Reader) (lines int, words int, chars int, bytes int) {
+	scanner := bufio.NewScanner(r)
+	scanner.Split(bufio.ScanLines)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		lines++
+		chars += len([]rune(line)) + 1
+		bytes += len(line) + 1
+
+		wordScanner := bufio.NewScanner(strings.NewReader(line))
+		wordScanner.Split(bufio.ScanWords)
+		for wordScanner.Scan() {
+			words++
+		}
+	}
+
+	return
 }
 
+func printCountsHeader(opts *CountingTargets) {
+	fmt.Printf("%-15s", "File")
+	if opts.line {
+		fmt.Printf("%10s", "Lines")
+	}
+	if opts.words {
+		fmt.Printf("%10s", "Words")
+	}
+	if opts.characters {
+		fmt.Printf("%10s", "Chars")
+	}
+	if opts.bytes {
+		fmt.Printf("%10s", "Bytes")
+	}
+	fmt.Println()
+}
+
+func printCounts(filename string, lines, words, chars, bytes int, opts *CountingTargets) {
+	fmt.Printf("%-15s", filename) // 左詰め15文字分のファイル名欄
+
+	if opts.line {
+		fmt.Printf("%10d", lines)
+	}
+	if opts.words {
+		fmt.Printf("%10d", words)
+	}
+	if opts.characters {
+		fmt.Printf("%10d", chars)
+	}
+	if opts.bytes {
+		fmt.Printf("%10d", bytes)
+	}
+	fmt.Println()
+}
+
+// func hello() string {
+// 	return "Welcome to tallylingo!"
+// }
+
 func goMain(args []string) int {
-	fmt.Println(hello())
+	flags, opts := buildFlagSet()
+	err := flags.Parse(args[1:])
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error parsing flags:", err)
+		return 1
+	}
+
+	if opts.printer.help {
+		flags.Usage()
+		return 0
+	}
+
+	if !opts.targets.words && !opts.targets.line && !opts.targets.characters && !opts.targets.bytes {
+		opts.targets.words = true
+		opts.targets.line = true
+		opts.targets.characters = true
+		opts.targets.bytes = true
+	}
+
+	files := flags.Args()
+	if len(files) == 0 {
+		fmt.Fprintln(os.Stderr, "No input files specified.")
+		return 1
+	}
+
+	printCountsHeader(opts.targets)
+
+	var totalLines, totalWords, totalChars, totalBytes int
+
+	for _, file := range files {
+		f, err := os.Open(file)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to open file %s: %v\n", file, err)
+			continue
+		}
+		defer f.Close()
+
+		lines, words, chars, bytes := countMetrics(f)
+		printCounts(file, lines, words, chars, bytes, opts.targets)
+
+		totalLines += lines
+		totalWords += words
+		totalChars += chars
+		totalBytes += bytes
+	}
+
+	if len(files) > 1 {
+		printCounts("Total", totalLines, totalWords, totalChars, totalBytes, opts.targets)
+	}
+
 	return 0
 }
 
