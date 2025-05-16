@@ -111,6 +111,17 @@ func printCountsHeader(opts *CountingTargets) {
 }
 
 func printCounts(filename string, lines, words, chars, bytes int, opts *CountingTargets) {
+	isTotal := filename == "Total"
+
+	colorStart := ""
+	colorEnd := ""
+
+	if isTotal {
+		colorStart = "\033[36m" // シアン
+		colorEnd = "\033[0m"
+	}
+
+	fmt.Printf("%s", colorStart)
 	fmt.Printf("%-15s", filename) // 左詰め15文字分のファイル名欄
 
 	if opts.line {
@@ -125,7 +136,7 @@ func printCounts(filename string, lines, words, chars, bytes int, opts *Counting
 	if opts.bytes {
 		fmt.Printf("%10d", bytes)
 	}
-	fmt.Println()
+	fmt.Printf("%s\n", colorEnd)
 }
 
 type countTotals struct {
