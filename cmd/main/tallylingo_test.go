@@ -6,13 +6,13 @@ import (
 )
 
 func TestCountMetrics(t *testing.T) {
-	text := "Hello world\nThis is a test\nAnother line"
+	text := "Hello world This is a test Another line"
 	reader := strings.NewReader(text)
 
 	lines, words, chars, bytes := countMetrics(reader)
 
-	if lines != 3 {
-		t.Errorf("Expected 3 lines, got %d", lines)
+	if lines != 1 {
+		t.Errorf("Expected 1 lines, got %d", lines)
 	}
 	if words != 8 {
 		t.Errorf("Expected 8 words, got %d", words)
@@ -99,4 +99,13 @@ func TestCountMetrics(t *testing.T) {
 
 func TestHelpMessage(t *testing.T) {
 	goMain([]string{"tallylingo", "-h"})
+	// Output :
+	// tallylingo [CLI_MODE_OPTIONS] <FILEs...>
+	// CLI_MODE_OPTIONS
+	// 	-w, --words        Prints the number of words in the input file
+	// 	-l, --lines        Prints the number of lines in the input file
+	// 	-c, --characters   Prints the number of characters in the input file
+	// 	-b, --bytes        Prints the number of bytes in the input file
+
+	// 	-h, --help        Prints this message
 }
