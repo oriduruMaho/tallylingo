@@ -17,8 +17,8 @@ func TestCountMetrics(t *testing.T) {
 	if words != 8 {
 		t.Errorf("Expected 8 words, got %d", words)
 	}
-	if chars != 43 {
-		t.Errorf("Expected 43 chars, got %d", chars)
+	if chars != 39 {
+		t.Errorf("Expected 39 chars, got %d", chars)
 	}
 	if bytes != len(text) {
 		t.Errorf("Expected %d bytes, got %d", len(text), bytes)

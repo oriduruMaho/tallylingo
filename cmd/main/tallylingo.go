@@ -11,14 +11,14 @@ import (
 )
 
 func helpMessage() string {
-	return fmt.Sprintf(`%s [CLI_MODE_OPTIONS] <FILEs...>
+	return (`tallylingo [CLI_MODE_OPTIONS] <FILEs...>
 CLI_MODE_OPTIONS
   -w, --words        Prints the number of words in the input file
   -l, --lines        Prints the number of lines in the input file
   -c, --characters   Prints the number of characters in the input file
   -b, --bytes        Prints the number of bytes in the input file
 
-  -h, --help        Prints this message`, os.Args[0])
+  -h, --help        Prints this message`)
 }
 
 type CountingTargets struct {
@@ -60,8 +60,8 @@ func countMetrics(r io.Reader) (lines int, words int, chars int, bytes int) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		lines++
-		chars += len([]rune(line)) + 1
-		bytes += len(line) + 1
+		chars += len([]rune(line))
+		bytes += len(line)
 
 		wordScanner := bufio.NewScanner(strings.NewReader(line))
 		wordScanner.Split(bufio.ScanWords)
