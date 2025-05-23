@@ -174,10 +174,6 @@ func processFiles(files []string, targets *CountingTargets) countTotals {
 
 func goMain(args []string) int {
 	flags, opts := buildFlagSet()
-	if err := parseAndValidateFlags(flags, opts, args); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		return 1
-	}
 
 	files := flags.Args()
 	if len(files) == 0 {

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"os"
 	"strings"
 	"testing"
 )
@@ -25,29 +27,29 @@ func TestCountMetrics(t *testing.T) {
 	}
 }
 
-// func TestPrintCounts(t *testing.T) {
-// 	old := os.Stdout
-// 	r, w, _ := os.Pipe()
-// 	os.Stdout = w
+func TestPrintCounts(t *testing.T) {
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
 
-// 	// 実行
-// 	printCounts("test.txt", 3, 5, 10, 12, &CountingTargets{
-// 		words: true, line: true, characters: false, bytes: false,
-// 	})
+	// 実行
+	printCounts("test.txt", 3, 5, 10, 12, &CountingTargets{
+		words: true, line: true, characters: false, bytes: false,
+	})
 
-// 	// キャプチャ
-// 	w.Close()
-// 	os.Stdout = old
-// 	output := new(bytes.Buffer)
-// 	_, _ = output.ReadFrom(r)
+	// キャプチャ
+	w.Close()
+	os.Stdout = old
+	output := new(bytes.Buffer)
+	_, _ = output.ReadFrom(r)
 
-// 	if !strings.Contains(output.String(), "test.txt") {
-// 		t.Error("Output missing filename")
-// 	}
-// 	if !strings.Contains(output.String(), "3") || !strings.Contains(output.String(), "5") {
-// 		t.Error("Output missing expected counts")
-// 	}
-// }
+	if !strings.Contains(output.String(), "test.txt") {
+		t.Error("Output missing filename")
+	}
+	if !strings.Contains(output.String(), "3") || !strings.Contains(output.String(), "5") {
+		t.Error("Output missing expected counts")
+	}
+}
 
 // func TestCLIMultipleFilesWithTotal(t *testing.T) {
 // 	cmd := exec.Command("./tallylingo", "-w", "testdata/sample1.txt", "testdata/sample2.txt")
