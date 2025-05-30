@@ -51,6 +51,51 @@ func TestPrintCounts(t *testing.T) {
 	}
 }
 
+func TestGoMainWithFileInput(t *testing.T) {
+	// --- 準備 ---
+	origStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	// CLI 引数のシミュレーション（goMain expects os.Args形式）
+	args := []string{"cmd", "-w", "testdata/sample1.txt"}
+	goMain(args)
+
+	// --- 出力取得 ---
+	w.Close()
+	os.Stdout = origStdout
+	var buf bytes.Buffer
+	_, _ = buf.ReadFrom(r)
+	output := buf.String()
+
+	// --- 検証 ---
+	if !strings.Contains(output, "Words") {
+		t.Errorf("Expected output to contain 'Words', got: %s", output)
+	}
+}
+
+func TestGoMainMultipleFilesShowsTotal(t *testing.T) {
+	// 標準出力をキャプチャ
+	origStdout := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	// CLI 引数をシミュレート
+	args := []string{"cmd", "testdata/sample1.txt", "testdata/sample2.txt"}
+	goMain(args)
+
+	// 出力取得
+	w.Close()
+	os.Stdout = origStdout
+	var buf bytes.Buffer
+	_, _ = buf.ReadFrom(r)
+	output := buf.String()
+
+	if !strings.Contains(output, "Total") {
+		t.Errorf("Expected output to include 'Total' line, got: %s", output)
+	}
+}
+
 func TestHelpMessage(t *testing.T) {
 	goMain([]string{"tallylingo", "-h"})
 	// Output :

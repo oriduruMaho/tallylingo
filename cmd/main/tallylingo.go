@@ -29,9 +29,9 @@ type CountingTargets struct {
 }
 
 type PrintOptions struct {
-	humanize bool
-	format   string
-	help     bool
+	// humanize bool
+	// format   string
+	help bool
 }
 
 type options struct {
@@ -162,10 +162,6 @@ func processFiles(files []string, targets *CountingTargets) countTotals {
 	}
 	return total
 }
-
-// func hello() string {
-// 	return "Welcome to tallylingo!"
-// }
 
 func goMain(args []string) int {
 	flags, opts := buildFlagSet()
