@@ -79,11 +79,6 @@ func parseAndValidateFlags(flags *flag.FlagSet, opts *options, args []string) er
 		return fmt.Errorf("error parsing flags: %w", err)
 	}
 
-	if opts.printer.help {
-		flags.Usage()
-		os.Exit(0)
-	}
-
 	if !opts.targets.words && !opts.targets.line && !opts.targets.characters && !opts.targets.bytes {
 		opts.targets.words = true
 		opts.targets.line = true
@@ -174,6 +169,16 @@ func processFiles(files []string, targets *CountingTargets) countTotals {
 
 func goMain(args []string) int {
 	flags, opts := buildFlagSet()
+	if err := parseAndValidateFlags(flags, opts, args); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
+	}
+
+	// ヘルプフラグが指定された場合は、ここでヘルプメッセージを表示して終了
+	if opts.printer.help {
+		flags.Usage()
+		return 0
+	}
 
 	files := flags.Args()
 	if len(files) == 0 {
