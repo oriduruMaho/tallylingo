@@ -29,9 +29,9 @@ type CountingTargets struct {
 }
 
 type PrintOptions struct {
-	humanize bool
-	format   string
-	help     bool
+	// humanize bool
+	// format   string
+	help bool
 }
 
 type options struct {
@@ -77,11 +77,6 @@ func parseAndValidateFlags(flags *flag.FlagSet, opts *options, args []string) er
 	err := flags.Parse(args[1:])
 	if err != nil {
 		return fmt.Errorf("error parsing flags: %w", err)
-	}
-
-	if opts.printer.help {
-		flags.Usage()
-		os.Exit(0)
 	}
 
 	if !opts.targets.words && !opts.targets.line && !opts.targets.characters && !opts.targets.bytes {
@@ -168,18 +163,36 @@ func processFiles(files []string, targets *CountingTargets) countTotals {
 	return total
 }
 
-// func hello() string {
-// 	return "Welcome to tallylingo!"
-// }
-
 func goMain(args []string) int {
 	flags, opts := buildFlagSet()
+	if err := parseAndValidateFlags(flags, opts, args); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		return 1
+	}
+
+	// ヘルプフラグが指定された場合は、ここでヘルプメッセージを表示して終了
+	if opts.printer.help {
+		flags.Usage()
+		return 0
+	}
 
 	files := flags.Args()
 	if len(files) == 0 {
 		fmt.Fprintln(os.Stderr, "No input files specified.")
 		return 1
 	}
+
+	// allExist := true
+	// for _, file := range files {
+	// 	if _, err := os.Stat(file); os.IsNotExist(err) {
+	// 		fmt.Fprintf(os.Stderr, "File not found: %s\n", file)
+	// 		allExist = false
+	// 	}
+	// }
+	// if !allExist {
+	// 	fmt.Fprintln(os.Stderr)
+	// 	return 1
+	// }
 
 	printCountsHeader(opts.targets)
 
