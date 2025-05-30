@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 	"testing"
+
+	flag "github.com/spf13/pflag"
 )
 
 func TestCountMetrics(t *testing.T) {
@@ -48,6 +50,96 @@ func TestPrintCounts(t *testing.T) {
 	}
 	if !strings.Contains(output.String(), "3") || !strings.Contains(output.String(), "5") {
 		t.Error("Output missing expected counts")
+	}
+}
+
+func TestPrintCountsHeader(t *testing.T) {
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	printCountsHeader(&CountingTargets{
+		line: true, words: true, characters: true, bytes: true,
+	})
+
+	w.Close()
+	os.Stdout = old
+	var buf bytes.Buffer
+	_, _ = buf.ReadFrom(r)
+	output := buf.String()
+
+	for _, label := range []string{"Lines", "Words", "Chars", "Bytes"} {
+		if !strings.Contains(output, label) {
+			t.Errorf("Header missing: %s", label)
+		}
+	}
+}
+
+func TestPrintCountsTotalColor(t *testing.T) {
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	printCounts("Total", 3, 5, 10, 12, &CountingTargets{
+		words: true, line: true, characters: false, bytes: false,
+	})
+
+	w.Close()
+	os.Stdout = old
+	var buf bytes.Buffer
+	_, _ = buf.ReadFrom(r)
+	output := buf.String()
+
+	if !strings.Contains(output, "\033[36m") || !strings.Contains(output, "\033[0m") {
+		t.Error("Expected ANSI color codes for 'Total' row")
+	}
+}
+
+func TestGoMainWithMissingFile(t *testing.T) {
+	oldStdout := os.Stdout
+	oldStderr := os.Stderr
+
+	rOut, wOut, _ := os.Pipe()
+	rErr, wErr, _ := os.Pipe()
+
+	os.Stdout = wOut
+	os.Stderr = wErr
+
+	// 実行
+	goMain([]string{"cmd", "-w", "nonexistent.txt"})
+
+	// 復元とクローズ
+	wOut.Close()
+	wErr.Close()
+	os.Stdout = oldStdout
+	os.Stderr = oldStderr
+
+	// 出力を取得
+	var outBuf, errBuf bytes.Buffer
+	_, _ = outBuf.ReadFrom(rOut)
+	_, _ = errBuf.ReadFrom(rErr)
+
+	// 検証
+	if !strings.Contains(errBuf.String(), "File not found") {
+		t.Errorf("Expected error message in stderr, got: %s", errBuf.String())
+	}
+}
+
+func TestParseAndValidateFlagsSetsAllDefault(t *testing.T) {
+	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}}
+	flags := flag.NewFlagSet("test", flag.ContinueOnError)
+	flags.BoolVarP(&opts.targets.words, "words", "w", false, "Count words")
+	flags.BoolVarP(&opts.targets.line, "lines", "l", false, "Count lines")
+	flags.BoolVarP(&opts.targets.characters, "characters", "c", false, "Count characters")
+	flags.BoolVarP(&opts.targets.bytes, "bytes", "b", false, "Count bytes")
+	flags.BoolVarP(&opts.printer.help, "help", "h", false, "Print help")
+
+	err := parseAndValidateFlags(flags, opts, []string{"cmd"})
+	if err != nil {
+		t.Fatalf("Unexpected error: %v", err)
+	}
+	if !(opts.targets.words && opts.targets.line && opts.targets.characters && opts.targets.bytes) {
+		t.Error("Expected all count flags to be set to true by default")
 	}
 }
 

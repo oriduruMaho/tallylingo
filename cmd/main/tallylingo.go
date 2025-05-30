@@ -182,6 +182,18 @@ func goMain(args []string) int {
 		return 1
 	}
 
+	allExist := true
+	for _, file := range files {
+		if _, err := os.Stat(file); os.IsNotExist(err) {
+			fmt.Fprintf(os.Stderr, "File not found: %s\n", file)
+			allExist = false
+		}
+	}
+	if !allExist {
+		fmt.Fprintln(os.Stderr)
+		return 1
+	}
+
 	printCountsHeader(opts.targets)
 
 	total := processFiles(files, opts.targets)
