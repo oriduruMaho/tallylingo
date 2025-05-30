@@ -179,7 +179,7 @@ func goMain(args []string) int {
 	files := flags.Args()
 	if len(files) == 0 {
 		fmt.Fprintln(os.Stderr, "No input files specified.")
-		return 1
+		return 0
 	}
 
 	allExist := true
@@ -191,7 +191,7 @@ func goMain(args []string) int {
 	}
 	if !allExist {
 		fmt.Fprintln(os.Stderr)
-		return 1
+		return 0
 	}
 
 	printCountsHeader(opts.targets)
