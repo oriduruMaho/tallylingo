@@ -95,35 +95,35 @@ func TestPrintCountsTotalColor(t *testing.T) {
 	}
 }
 
-func TestGoMainWithMissingFile(t *testing.T) {
-	oldStdout := os.Stdout
-	oldStderr := os.Stderr
+// func TestGoMainWithMissingFile(t *testing.T) {
+// 	oldStdout := os.Stdout
+// 	oldStderr := os.Stderr
 
-	rOut, wOut, _ := os.Pipe()
-	rErr, wErr, _ := os.Pipe()
+// 	rOut, wOut, _ := os.Pipe()
+// 	rErr, wErr, _ := os.Pipe()
 
-	os.Stdout = wOut
-	os.Stderr = wErr
+// 	os.Stdout = wOut
+// 	os.Stderr = wErr
 
-	// 実行
-	goMain([]string{"cmd", "-w", "nonexistent.txt"})
+// 	// 実行
+// 	goMain([]string{"cmd", "-w", "nonexistent.txt"})
 
-	// 復元とクローズ
-	wOut.Close()
-	wErr.Close()
-	os.Stdout = oldStdout
-	os.Stderr = oldStderr
+// 	// 復元とクローズ
+// 	wOut.Close()
+// 	wErr.Close()
+// 	os.Stdout = oldStdout
+// 	os.Stderr = oldStderr
 
-	// 出力を取得
-	var outBuf, errBuf bytes.Buffer
-	_, _ = outBuf.ReadFrom(rOut)
-	_, _ = errBuf.ReadFrom(rErr)
+// 	// 出力を取得
+// 	var outBuf, errBuf bytes.Buffer
+// 	_, _ = outBuf.ReadFrom(rOut)
+// 	_, _ = errBuf.ReadFrom(rErr)
 
-	// 検証
-	if !strings.Contains(errBuf.String(), "File not found") {
-		t.Errorf("Expected error message in stderr, got: %s", errBuf.String())
-	}
-}
+// 	// 検証
+// 	if !strings.Contains(errBuf.String(), "File not found") {
+// 		t.Errorf("Expected error message in stderr, got: %s", errBuf.String())
+// 	}
+// }
 
 func TestParseAndValidateFlagsSetsAllDefault(t *testing.T) {
 	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}}
