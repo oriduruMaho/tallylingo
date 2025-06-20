@@ -15,4 +15,4 @@ COPY --from=builder /work/tallylingo /opt/tallylingo/tallylingo
 COPY --from=golang:1.12 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 WORKDIR /workdir
 USER nonroot
-ENTRYPOINT [ "/opt/tallylingo/tallylingo" ]
+ENTRYPOINT [ "/opt/tallylingo/tallylingo" ] 
