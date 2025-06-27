@@ -17,9 +17,9 @@ func GenerateCompletion(flag *pflag.FlagSet) error {
 	os.Mkdir("completions/zsh", 0755)
 	os.Mkdir("completions/fish", 0755)
 	os.Mkdir("completions/powershell", 0755)
-	command.GenBashCompletionFileV2("completions/bash/urleap", true)
-	command.GenZshCompletionFile("completions/zsh/urleap")
-	command.GenFishCompletionFile("completions/fish/urleap", true)
-	command.GenPowerShellCompletionFile("completions/ps1/urleap")
+	command.GenBashCompletionFileV2("completions/bash/tallylingo", true)
+	command.GenZshCompletionFile("completions/zsh/tallylingo")
+	command.GenFishCompletionFile("completions/fish/tallylingo", true)
+	command.GenPowerShellCompletionFile("completions/ps1/tallylingo")
 	return nil
 }
