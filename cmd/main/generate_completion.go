@@ -16,7 +16,7 @@ func GenerateCompletion(flag *pflag.FlagSet) error {
 	os.Mkdir("completions/bash", 0755)
 	os.Mkdir("completions/zsh", 0755)
 	os.Mkdir("completions/fish", 0755)
-	os.Mkdir("completions/powershell", 0755)
+	os.Mkdir("completions/ps1", 0755)
 	command.GenBashCompletionFileV2("completions/bash/tallylingo", true)
 	command.GenZshCompletionFile("completions/zsh/tallylingo")
 	command.GenFishCompletionFile("completions/fish/tallylingo", true)
