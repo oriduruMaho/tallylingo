@@ -38,6 +38,7 @@ type options struct {
 	targets  *CountingTargets
 	printer  *PrintOptions
 	logLevel string
+	generateCompletions bool
 }
 
 func buildFlagSet() (*flag.FlagSet, *options) {
@@ -50,6 +51,8 @@ func buildFlagSet() (*flag.FlagSet, *options) {
 	flags.BoolVarP(&opts.targets.characters, "characters", "c", false, "Count characters")
 	flags.BoolVarP(&opts.targets.bytes, "bytes", "b", false, "Count bytes")
 	flags.BoolVarP(&opts.printer.help, "help", "h", false, "Print this message")
+	flags.BoolVarP(&opts.generateCompletions, "generate-completions", "", false, "generate completions")
+	flags.MarkHidden("generate-completions")
 	return flags, opts
 }
 
