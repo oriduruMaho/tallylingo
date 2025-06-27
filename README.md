@@ -4,7 +4,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/oriduruMaho/tallylingo)](https://goreportcard.com/report/github.com/oriduruMaho/tallylingo)
 [![Coverage Status](https://coveralls.io/repos/github/oriduruMaho/tallylingo/badge.svg?branch=main)](https://coveralls.io/github/oriduruMaho/tallylingo?branch=main)
 
-![Version](https://img.shields.io/badge/Version-0.4.1-blue)
+![Version](https://img.shields.io/badge/Version-0.4.2-blue)
 [![DOI](https://zenodo.org/badge/964313902.svg)](https://doi.org/10.5281/zenodo.15320893)
 
 This is a CLI tool that allows you to easily obtain text statistics such as the number of characters, words, and lines.
