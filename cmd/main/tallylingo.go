@@ -179,6 +179,14 @@ func goMain(args []string) int {
 		return 0
 	}
 
+	if opts.completions {
+		if err := GenerateCompletion(flags); err != nil {
+			fmt.Fprintf(os.Stderr, "Failed to generate completions: %v\n", err)
+			return 1
+		}
+		return 0
+	}
+
 	files := flags.Args()
 	if len(files) == 0 {
 		fmt.Fprintln(os.Stderr, "No input files specified.")
