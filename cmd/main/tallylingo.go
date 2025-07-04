@@ -35,14 +35,14 @@ type PrintOptions struct {
 }
 
 type options struct {
-	targets  *CountingTargets
-	printer  *PrintOptions
-	logLevel string
-	generateCompletions bool
+	targets     *CountingTargets
+	printer     *PrintOptions
+	logLevel    string
+	completions bool
 }
 
 func buildFlagSet() (*flag.FlagSet, *options) {
-	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}, logLevel: "info"}
+	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}, logLevel: "info", completions: false}
 	flags := flag.NewFlagSet("tallylingo", flag.ContinueOnError)
 	flags.Usage = func() { fmt.Println(helpMessage()) }
 	flags.StringVarP(&opts.logLevel, "log", "L", "info", "Set the log level")
@@ -51,7 +51,7 @@ func buildFlagSet() (*flag.FlagSet, *options) {
 	flags.BoolVarP(&opts.targets.characters, "characters", "c", false, "Count characters")
 	flags.BoolVarP(&opts.targets.bytes, "bytes", "b", false, "Count bytes")
 	flags.BoolVarP(&opts.printer.help, "help", "h", false, "Print this message")
-	flags.BoolVarP(&opts.generateCompletions, "generate-completions", "", false, "generate completions")
+	flags.BoolVarP(&opts.completions, "generate-completions", "", false, "generate completions")
 	flags.MarkHidden("generate-completions")
 	return flags, opts
 }
