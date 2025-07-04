@@ -2,7 +2,7 @@ FROM golang:1-bullseye AS builder
 WORKDIR /work
 ARG CGO_ENABLED=0
 COPY . .
-RUN go build -o tallylingo cmd/main/tallylingo.go
+RUN go build -o tallylingo ./cmd/main
 FROM alpine:latest
 ARG VERSION=0.5.1
 LABEL org.opencontainers.image.source=https://github.com/oriduruMaho/tallylingo \
