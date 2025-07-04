@@ -185,6 +185,15 @@ func goMain(args []string) int {
 		return 0
 	}
 
+	if flags.Lookup("generate-completions").Changed {
+		err := GenerateCompletion(flags)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Completion generation failed: %v\n", err)
+			return 1
+		}
+		return 0
+	}
+
 	files := flags.Args()
 	if len(files) == 0 {
 		fmt.Fprintln(os.Stderr, "No input files specified.")
