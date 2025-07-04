@@ -105,6 +105,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from:
-            type=registry,ref=ghcr.io/${{ github.repository }}:buildcache
+            type=registry,ref=ghcr.io/${{ steps.vars.outputs.OWNER_LOWER }}/tallylingo:buildcache
           cache-to:
-            type=registry,ref=ghcr.io/${{ github.repository }}:buildcache,mode=max
+            type=registry,ref=ghcr.io/${{ steps.vars.outputs.OWNER_LOWER }}/tallylingo:buildcache,mode=max
