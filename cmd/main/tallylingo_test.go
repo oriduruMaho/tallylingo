@@ -143,6 +143,35 @@ func TestParseAndValidateFlagsSetsAllDefault(t *testing.T) {
 	}
 }
 
+func TestGenerateCompletionsFlag(t *testing.T) {
+	// stdout キャプチャ
+	old := os.Stdout
+	r, w, _ := os.Pipe()
+	os.Stdout = w
+
+	// 実行
+	exitCode := goMain([]string{"cmd", "--generate-completions"})
+
+	// 復元
+	w.Close()
+	os.Stdout = old
+	var buf bytes.Buffer
+	_, _ = buf.ReadFrom(r)
+
+	if exitCode != 0 {
+		t.Errorf("Expected status 0 for --generate-completions, got %d", exitCode)
+	}
+
+	// 出力された補完ファイル用ディレクトリが存在することを確認
+	for _, dir := range []string{
+		"completions/bash", "completions/zsh", "completions/fish", "completions/ps1",
+	} {
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			t.Errorf("Expected completion directory missing: %s", dir)
+		}
+	}
+}
+
 func TestGoMainWithFileInput(t *testing.T) {
 	// --- 準備 ---
 	origStdout := os.Stdout

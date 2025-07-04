@@ -13,7 +13,7 @@ Version := `grep '^const VERSION = ' cmd/main/version.go | sed "s/^VERSION = \"\
 
 # build the application
 build: test
-    go build -o tallylingo cmd/main/tallylingo.go
+    go build -o tallylingo ./cmd/main
 
 # run tests and generate coverage report
 test:

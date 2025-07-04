@@ -29,8 +29,6 @@ type CountingTargets struct {
 }
 
 type PrintOptions struct {
-	// humanize bool
-	// format   string
 	help bool
 }
 
@@ -42,7 +40,7 @@ type options struct {
 }
 
 func buildFlagSet() (*flag.FlagSet, *options) {
-	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}, logLevel: "info", completions: false}
+	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}, logLevel: "info"}
 	flags := flag.NewFlagSet("tallylingo", flag.ContinueOnError)
 	flags.Usage = func() { fmt.Println(helpMessage()) }
 	flags.StringVarP(&opts.logLevel, "log", "L", "info", "Set the log level")
@@ -173,9 +171,26 @@ func goMain(args []string) int {
 		return 1
 	}
 
-	// ヘルプフラグが指定された場合は、ここでヘルプメッセージを表示して終了
 	if opts.printer.help {
 		flags.Usage()
+		return 0
+	}
+
+	if opts.completions {
+		err := GenerateCompletion(flags)
+		if err != nil {
+			fmt.Fprintln(os.Stderr, "failed to generate completions:", err)
+			return 1
+		}
+		return 0
+	}
+
+	if flags.Lookup("generate-completions").Changed {
+		err := GenerateCompletion(flags)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Completion generation failed: %v\n", err)
+			return 1
+		}
 		return 0
 	}
 
@@ -198,7 +213,6 @@ func goMain(args []string) int {
 	}
 
 	printCountsHeader(opts.targets)
-
 	total := processFiles(files, opts.targets)
 
 	if len(files) > 1 {

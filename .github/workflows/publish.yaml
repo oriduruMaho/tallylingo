@@ -78,7 +78,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           # ${{ github.repository }} = tamada/totebag
-          images: ghcr.io/oridurumaho/tallylingo
+          images: ghcr.io/${{ env.REPO_LOWERCASE }}
           tags: |
             type=raw,value=latest
             type=sha,prefix=,suffix=,format=short
@@ -101,6 +101,6 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from:
-            type=registry,ref=ghcr.io/oridurumaho/tallylingo:buildcache
+            type=registry,ref=ghcr.io/${{ env.REPO_LOWERCASE }}:buildcache
           cache-to:
-            type=registry,ref=ghcr.io/oridurumaho/tallylingo:buildcache,mode=max
+            type=registry,ref=ghcr.io/${{ env.REPO_LOWERCASE }}:buildcache,mode=max
