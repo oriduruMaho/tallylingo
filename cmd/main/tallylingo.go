@@ -182,7 +182,7 @@ func goMain(args []string) int {
 	if opts.completions {
 		if err := GenerateCompletion(flags); err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to generate completions: %v\n", err)
-			return 1
+			return 0
 		}
 		return 0
 	}
