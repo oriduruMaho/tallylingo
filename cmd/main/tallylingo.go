@@ -35,14 +35,14 @@ type PrintOptions struct {
 }
 
 type options struct {
-	targets     *CountingTargets
-	printer     *PrintOptions
-	logLevel    string
-	completions bool
+	targets  *CountingTargets
+	printer  *PrintOptions
+	logLevel string
 }
 
 func buildFlagSet() (*flag.FlagSet, *options) {
-	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}, logLevel: "info", completions: false}
+	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}, logLevel: "info"}
+	completions := false
 	flags := flag.NewFlagSet("tallylingo", flag.ContinueOnError)
 	flags.Usage = func() { fmt.Println(helpMessage()) }
 	flags.StringVarP(&opts.logLevel, "log", "L", "info", "Set the log level")
@@ -51,7 +51,7 @@ func buildFlagSet() (*flag.FlagSet, *options) {
 	flags.BoolVarP(&opts.targets.characters, "characters", "c", false, "Count characters")
 	flags.BoolVarP(&opts.targets.bytes, "bytes", "b", false, "Count bytes")
 	flags.BoolVarP(&opts.printer.help, "help", "h", false, "Print this message")
-	flags.BoolVarP(&opts.completions, "generate-completions", "", false, "generate completions")
+	flags.BoolVarP(&completions, "generate-completions", "", false, "generate completions")
 	flags.MarkHidden("generate-completions")
 	return flags, opts
 }
@@ -176,14 +176,6 @@ func goMain(args []string) int {
 	// ヘルプフラグが指定された場合は、ここでヘルプメッセージを表示して終了
 	if opts.printer.help {
 		flags.Usage()
-		return 0
-	}
-
-	if opts.completions {
-		if err := GenerateCompletion(flags); err != nil {
-			fmt.Fprintf(os.Stderr, "Failed to generate completions: %v\n", err)
-			return 0
-		}
 		return 0
 	}
 
