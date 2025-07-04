@@ -40,6 +40,8 @@ type options struct {
 	logLevel string
 }
 
+var completions bool
+
 func buildFlagSet() (*flag.FlagSet, *options) {
 	opts := &options{targets: &CountingTargets{}, printer: &PrintOptions{}, logLevel: "info"}
 	completions := false
@@ -171,6 +173,15 @@ func goMain(args []string) int {
 	if err := parseAndValidateFlags(flags, opts, args); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		return 1
+	}
+
+	if completions {
+		err := GenerateCompletion(flags)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error generating completions: %v\n", err)
+			return 1
+		}
+		return 0
 	}
 
 	// ヘルプフラグが指定された場合は、ここでヘルプメッセージを表示して終了
