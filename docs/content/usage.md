@@ -1,9 +1,4 @@
 ---
-
-### 📄 `content/usage.md`（使い方ページ）
-
-```markdown
----
 title: "Usage and Options"
 ---
 
