@@ -37,11 +37,15 @@ It supports multiple files and outputs aligned results with an optional total su
 
 ---
 
-## Getting Started
-
-Install from source:
+## Usage
 
 ```bash
-git clone https://github.com/oriduruMaho/tallylingo.git
-cd tallylingo
-go build -o tallylingo
+tallylingo [CLI_MODE_OPTIONS] <FILEs...>
+CLI_MODE_OPTIONS
+  -w, --words        Prints the number of words in the input file
+  -l, --lines        Prints the number of lines in the input file
+  -c, --characters   Prints the number of characters in the input file
+  -b, --bytes        Prints the number of bytes in the input file
+
+  -h, --help        Prints this message
+```
